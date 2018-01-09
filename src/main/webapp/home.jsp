@@ -1,3 +1,4 @@
+<!-- The two JSP page directives below allow the Core (c:) and Shiro (shiro:) taglibraries in the page. -->
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
@@ -14,6 +15,10 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Step 4: change a web user interface based on who the user is with the help of shiro JSP tag library.
+  You can turn off or on entire page sections, features and UI components. Shiro supports many other useful  
+  JSP tags that you can use to customise the UI based on various things known about the current Subject.
   --%>
 <jsp:include page="include.jsp"/>
 <!DOCTYPE html>
@@ -37,10 +42,15 @@
             //This should never be done in a normal page and should exist in a proper MVC controller of some sort, but for this
             //tutorial, we'll just pull out Stormpath Account data from Shiro's PrincipalCollection to reference in the
             //<c:out/> tag next:
-
             request.setAttribute("account", org.apache.shiro.SecurityUtils.getSubject().getPrincipals().oneByType(java.util.Map.class));
 
         %>
+        <%-- <shiro:guest>: This tag will only display its internal contents if the current Shiro Subject is an application 'guest'.
+        	 <shiro:user>: This tag will only display its internal contents if the current Shiro Subject is an application ‘user’. 
+        	 Shiro defines a user as any Subject that is currently logged in to (authenticated with) the application or one that is 
+        	 remembered from a previous login (using Shiro’s ‘remember me’ functionality).
+        	  ‘Log in’ and ‘Log out’ are hyperlinks to the ‘/login.jsp’ and ‘/logout’ urls handled respectively by the Shiro authc
+        	  and logout filter. --%>
         <c:out value="${account.givenName}"/></shiro:user>!
         ( <shiro:user><a href="<c:url value="/logout"/>">Log out</a></shiro:user>
         <shiro:guest><a href="<c:url value="/login.jsp"/>">Log in</a></shiro:guest> )
